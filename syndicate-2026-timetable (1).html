@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SYNDICATE 2026 – Timetable</title>
+<link rel="icon" href="data:,">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Bebas+Neue&display=swap');
+
+  :root{
+    --bg: #0c0a08;
+    --surface: #17130f;
+    --surface-2: #211a14;
+    --line: #35291d;
+    --ember: #c9782c;
+    --ember-bright: #e8a33d;
+    --text: #f2e9dc;
+    --text-dim: #a89a86;
+    --danger: #d4574a;
+  }
+  *{ box-sizing: border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 15% 0%, rgba(201,120,44,0.10), transparent 45%),
+      radial-gradient(circle at 90% 20%, rgba(201,120,44,0.06), transparent 40%);
+    color: var(--text);
+    font-family: 'Oswald', sans-serif;
+    font-weight: 400;
+    line-height: 1.4;
+    min-height: 100vh;
+  }
+  h1,h2,h3{
+    font-family: 'Bebas Neue', 'Oswald', sans-serif;
+    letter-spacing: 0.03em;
+    margin: 0;
+  }
+
+  header.hero{
+    padding: 3rem 1.2rem 2rem;
+    text-align: center;
+    border-bottom: 1px solid var(--line);
+  }
+  header.hero .brand{
+    font-size: clamp(2.6rem, 9vw, 4.6rem);
+    color: var(--text);
+    text-transform: uppercase;
+  }
+  header.hero .brand span{ color: var(--ember-bright); }
+  header.hero .meta{
+    margin-top: 0.6rem;
+    color: var(--text-dim);
+    font-size: 1rem;
+  }
+  header.hero .meta strong{ color: var(--ember-bright); font-weight: 500; }
+
+  .wrap{
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 1.6rem 1.2rem 4rem;
+  }
+
+  .hint{
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+  }
+  .hint strong{ color: var(--ember-bright); font-weight: 500; }
+
+  /* Legend */
+  .legend{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9rem;
+    margin-bottom: 1rem;
+  }
+  .legend .item{
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--text-dim);
+  }
+  .legend .swatch{
+    width: 0.8rem; height: 0.8rem;
+    border-radius: 2px;
+  }
+
+  /* Timeline */
+  .timeline-outer{
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--surface);
+    -webkit-overflow-scrolling: touch;
+  }
+  .timeline-inner{
+    position: relative;
+  }
+  .ruler{
+    position: relative;
+    height: 34px;
+    border-bottom: 1px solid var(--line);
+  }
+  .ruler .tick{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    border-left: 1px solid var(--line);
+    padding-left: 6px;
+    display: flex;
+    align-items: center;
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .stage-track{
+    position: relative;
+    border-bottom: 1px solid var(--line);
+    height: 84px;
+  }
+  .stage-track:last-child{ border-bottom: none; }
+  .stage-track .stage-tag{
+    position: sticky;
+    left: 0;
+    top: 0;
+    z-index: 3;
+    display: inline-block;
+    padding: 0.3rem 0.7rem;
+    margin: 0.5rem 0 0 0.5rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-radius: 3px;
+    color: #14100c;
+  }
+  .stage-track .grid-lines{
+    position: absolute;
+    inset: 0;
+  }
+  .stage-track .grid-lines .vline{
+    position: absolute;
+    top: 0; bottom: 0;
+    border-left: 1px solid var(--line);
+  }
+
+  .block{
+    position: absolute;
+    top: 32px;
+    bottom: 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(0,0,0,0.35);
+    padding: 0.35rem 0.5rem;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.15s, filter 0.15s;
+    color: #17110a;
+  }
+  .block:hover{ filter: brightness(1.08); }
+  .block:active{ transform: scale(0.98); }
+  .block .b-time{
+    font-size: 0.68rem;
+    font-weight: 600;
+    opacity: 0.85;
+    white-space: nowrap;
+  }
+  .block .b-name{
+    font-size: 0.85rem;
+    font-weight: 600;
+    line-height: 1.15;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .block .b-sub{
+    font-size: 0.62rem;
+    opacity: 0.75;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .block.selected{
+    outline: 2px solid var(--text);
+    outline-offset: -2px;
+    box-shadow: 0 0 0 3px rgba(242,233,220,0.15);
+  }
+  .block.selected::after{
+    content: "✓";
+    position: absolute;
+    top: 2px;
+    right: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+  }
+
+  /* My timetable panel */
+  .panel{
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 1.2rem;
+    margin-top: 1.8rem;
+  }
+  .panel h2{
+    font-size: 1.8rem;
+    text-transform: uppercase;
+    color: var(--ember-bright);
+    margin-bottom: 0.2rem;
+  }
+  .panel .sub-note{
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+  }
+  .my-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 0.7rem;
+  }
+  .my-slot{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.5rem;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 0.6rem 0.7rem;
+    border-left: 4px solid var(--ember);
+  }
+  .my-slot.overlap{ border-left-color: var(--danger); }
+  .my-slot .info .time{ color: var(--ember-bright); font-weight: 600; font-size: 0.82rem; }
+  .my-slot.overlap .info .time{ color: var(--danger); }
+  .my-slot .info .act{ font-size: 0.96rem; }
+  .my-slot .info .stage{ color: var(--text-dim); font-size: 0.7rem; text-transform: uppercase; }
+  .my-slot .info .overlap-note{ color: var(--danger); font-size: 0.68rem; text-transform: uppercase; display:block; }
+  .my-slot .remove{
+    background: none; border: none;
+    color: var(--text-dim);
+    font-size: 1.05rem;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .my-slot .remove:hover{ color: var(--danger); }
+  .empty-msg{
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    padding: 0.6rem 0;
+  }
+  .panel-actions{
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 1.2rem;
+    flex-wrap: wrap;
+  }
+  .panel-actions button{
+    flex: 1;
+    min-width: 140px;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    color: var(--text);
+    padding: 0.6rem 0.8rem;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+    letter-spacing: 0.03em;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  .panel-actions button:hover{ border-color: var(--ember-bright); color: var(--ember-bright); }
+
+  footer{
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 0.78rem;
+    padding: 1.5rem;
+    border-top: 1px solid var(--line);
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="brand">SYNDICATE <span>2026</span></div>
+  <div class="meta">03.10.26 &nbsp;·&nbsp; <strong>Westfalenhallen, Dortmund</strong> &nbsp;·&nbsp; 19:00 – 05:00</div>
+</header>
+
+<div class="wrap">
+  <p class="hint">Tippe auf einen DJ-Block, um ihn zu <strong>„Mein Timetable“</strong> hinzuzufügen. Nach links/rechts wischen, um die ganze Nacht zu sehen.</p>
+
+  <div class="legend" id="legend"></div>
+
+  <div class="timeline-outer">
+    <div class="timeline-inner" id="timelineInner"></div>
+  </div>
+
+  <div class="panel">
+    <h2>Mein Timetable</h2>
+    <div class="sub-note">Deine Auswahl wird lokal in diesem Browser gespeichert.</div>
+    <div id="mySchedule"></div>
+    <div class="panel-actions">
+      <button id="clearBtn">Leeren</button>
+      <button id="exportBtn">Als Text exportieren</button>
+    </div>
+  </div>
+</div>
+
+<footer>Inoffizielles Fan-Tool auf Basis des veröffentlichten Timetables · nicht offiziell mit SYNDICATE / Dutch Hardcore Ambassadors verbunden.</footer>
+
+<script>
+  // ---- Data ----------------------------------------------------------
+  const stages = [
+    {
+      name: "Mainstage",
+      host: "Tha Watcher",
+      color: "#c9782c",
+      acts: [
+        ["19:00","20:30","Predator"],
+        ["20:30","21:30","Mad Dog"],
+        ["21:30","22:30","Korsakoff"],
+        ["22:30","23:30","Chaos Project"],
+        ["23:30","00:00","Hysta","Dance With The Wolves"],
+        ["00:00","01:00","Neophyte","The Timemachine"],
+        ["01:00","02:00","Angerfist"],
+        ["02:00","02:45","Dr. Peacock"],
+        ["02:45","03:30","Miss K8"],
+        ["03:30","04:15","The Dark Horror"],
+        ["04:15","05:00","Paul Elstak"],
+      ]
+    },
+    {
+      name: "Uptempo",
+      host: "Flo",
+      color: "#d9552f",
+      acts: [
+        ["20:30","21:30","99Problemz"],
+        ["21:30","22:30","Revealer vs. Complex"],
+        ["22:30","23:30","Gezellige Uptempo"],
+        ["23:30","00:30","Partyraiser"],
+        ["00:30","01:00","Cryogenic","Reincarnated Live"],
+        ["01:00","02:00","Barber vs. Roosterz"],
+        ["02:00","03:00","Pinotello"],
+        ["03:00","04:00","Spitnoise vs. Juliëx vs. Kili"],
+        ["04:00","05:00","Dr Donk"],
+      ]
+    },
+    {
+      name: "Raw",
+      host: "Nolz",
+      color: "#8f2a2a",
+      acts: [
+        ["20:30","22:00","Zelecter"],
+        ["22:00","23:00","Act of Rage"],
+        ["23:00","00:00","Mish"],
+        ["00:00","00:45","D-Sturb"],
+        ["00:45","01:30","The Saints"],
+        ["01:30","02:15","Mutilator"],
+        ["02:15","03:00","More Kords"],
+        ["03:00","04:30","Spoontechnicians","Chapter V, Mortis & The Smiler"],
+      ]
+    },
+    {
+      name: "Early Hardcore",
+      host: "Alee",
+      color: "#6b3fa0",
+      acts: [
+        ["20:30","21:30","Crucifier"],
+        ["21:30","22:30","Marc Acardipane"],
+        ["22:30","00:00","Vince"],
+        ["00:00","01:30","Panic"],
+        ["01:30","02:30","Ruffneck"],
+        ["02:30","03:30","Painbringer"],
+        ["03:30","04:30","The Viper"],
+      ]
+    },
+  ];
+
+  // ---- Timeline geometry -------------------------------------------
+  const PX_PER_MIN = 7;              // horizontal scale
+  const DAY_START_H = 19;            // 19:00
+  const DAY_END_H = 5;               // 05:00 (next day)
+  const TIMELINE_START = DAY_START_H * 60;                 // 1140
+  const TIMELINE_END = (DAY_END_H + 24) * 60;               // 1740
+  const TIMELINE_MIN_TOTAL = TIMELINE_END - TIMELINE_START; // 600
+  const TIMELINE_WIDTH = TIMELINE_MIN_TOTAL * PX_PER_MIN;
+
+  function toAbsMinutes(hhmm){
+    const [h,m] = hhmm.split(":").map(Number);
+    const total = h*60+m;
+    return h < DAY_END_H + 1 ? total + 24*60 : total; // hours 0..5 => next day
+  }
+
+  function xFromTime(hhmm){
+    return (toAbsMinutes(hhmm) - TIMELINE_START) * PX_PER_MIN;
+  }
+
+  function slotId(stageIdx, actIdx){ return stageIdx+"-"+actIdx; }
+
+  let selected = JSON.parse(localStorage.getItem("syndicate2026-selection-v2") || "[]");
+  function save(){ localStorage.setItem("syndicate2026-selection-v2", JSON.stringify(selected)); }
+  function isSelected(id){ return selected.some(s => s.id === id); }
+
+  // ---- Legend ---------------------------------------------------------
+  const legendEl = document.getElementById("legend");
+  stages.forEach(s => {
+    const item = document.createElement("div");
+    item.className = "item";
+    item.innerHTML = `<span class="swatch" style="background:${s.color}"></span> ${s.name}`;
+    legendEl.appendChild(item);
+  });
+
+  // ---- Build timeline ---------------------------------------------------
+  const timelineInner = document.getElementById("timelineInner");
+
+  function renderTimeline(){
+    timelineInner.innerHTML = "";
+    timelineInner.style.width = TIMELINE_WIDTH + "px";
+
+    // Ruler
+    const ruler = document.createElement("div");
+    ruler.className = "ruler";
+    ruler.style.width = TIMELINE_WIDTH + "px";
+    for(let h = DAY_START_H; h <= DAY_END_H + 24; h++){
+      const displayHour = h % 24;
+      const x = (h*60 - TIMELINE_START) * PX_PER_MIN;
+      const tick = document.createElement("div");
+      tick.className = "tick";
+      tick.style.left = x + "px";
+      tick.textContent = String(displayHour).padStart(2,"0") + ":00";
+      ruler.appendChild(tick);
+    }
+    timelineInner.appendChild(ruler);
+
+    // Stage tracks
+    stages.forEach((stage, stageIdx) => {
+      const track = document.createElement("div");
+      track.className = "stage-track";
+      track.style.width = TIMELINE_WIDTH + "px";
+
+      // vertical grid lines (aligned with hour ticks)
+      const gridLines = document.createElement("div");
+      gridLines.className = "grid-lines";
+      for(let h = DAY_START_H; h <= DAY_END_H + 24; h++){
+        const x = (h*60 - TIMELINE_START) * PX_PER_MIN;
+        const vline = document.createElement("div");
+        vline.className = "vline";
+        vline.style.left = x + "px";
+        gridLines.appendChild(vline);
+      }
+      track.appendChild(gridLines);
+
+      const tag = document.createElement("div");
+      tag.className = "stage-tag";
+      tag.style.background = stage.color;
+      tag.textContent = stage.name + " · " + stage.host;
+      track.appendChild(tag);
+
+      stage.acts.forEach((a, actIdx) => {
+        const [start, end, name, sub] = a;
+        const id = slotId(stageIdx, actIdx);
+        const x = xFromTime(start);
+        const w = Math.max(xFromTime(end) - x, 44);
+
+        const block = document.createElement("div");
+        block.className = "block" + (isSelected(id) ? " selected" : "");
+        block.style.left = x + "px";
+        block.style.width = w + "px";
+        block.style.background = stage.color;
+        block.innerHTML = `
+          <div class="b-time">${start}–${end}</div>
+          <div class="b-name">${name}</div>
+          ${sub ? `<div class="b-sub">${sub}</div>` : ""}
+        `;
+        block.onclick = () => toggleSlot(stageIdx, actIdx);
+        track.appendChild(block);
+      });
+
+      timelineInner.appendChild(track);
+    });
+  }
+
+  function toggleSlot(stageIdx, actIdx){
+    const id = slotId(stageIdx, actIdx);
+    const idx = selected.findIndex(s => s.id === id);
+    if(idx >= 0){
+      selected.splice(idx,1);
+    } else {
+      const [start,end,name,sub] = stages[stageIdx].acts[actIdx];
+      selected.push({ id, stage: stages[stageIdx].name, start, end, name, sub: sub || "" });
+    }
+    save();
+    renderTimeline();
+    renderSchedule();
+  }
+
+  // ---- Render "my timetable" panel --------------------------------------
+  const scheduleEl = document.getElementById("mySchedule");
+
+  function renderSchedule(){
+    scheduleEl.innerHTML = "";
+    if(selected.length === 0){
+      scheduleEl.innerHTML = `<div class="empty-msg">Noch keine Acts ausgewählt. Tippe oben in der Zeitleiste auf einen DJ-Block.</div>`;
+      return;
+    }
+
+    const sorted = [...selected].sort((a,b) => toAbsMinutes(a.start) - toAbsMinutes(b.start));
+    const grid = document.createElement("div");
+    grid.className = "my-grid";
+
+    sorted.forEach((item, i) => {
+      const startMin = toAbsMinutes(item.start);
+      const endMin = toAbsMinutes(item.end);
+      let overlaps = false;
+      sorted.forEach((other, j) => {
+        if(i === j) return;
+        const oStart = toAbsMinutes(other.start);
+        const oEnd = toAbsMinutes(other.end);
+        if(startMin < oEnd && oStart < endMin) overlaps = true;
+      });
+
+      const row = document.createElement("div");
+      row.className = "my-slot" + (overlaps ? " overlap" : "");
+      row.innerHTML = `
+        <div class="info">
+          <div class="time">${item.start} – ${item.end}</div>
+          <div class="act">${item.name}</div>
+          <div class="stage">${item.stage}</div>
+          ${overlaps ? '<span class="overlap-note">Überschneidung</span>' : ""}
+        </div>
+      `;
+      const rm = document.createElement("button");
+      rm.className = "remove";
+      rm.textContent = "✕";
+      rm.title = "Entfernen";
+      rm.onclick = () => {
+        selected = selected.filter(s => s.id !== item.id);
+        save();
+        renderTimeline();
+        renderSchedule();
+      };
+      row.appendChild(rm);
+      grid.appendChild(row);
+    });
+
+    scheduleEl.appendChild(grid);
+  }
+
+  document.getElementById("clearBtn").onclick = () => {
+    if(selected.length && !confirm("Deine gesamte Auswahl löschen?")) return;
+    selected = [];
+    save();
+    renderTimeline();
+    renderSchedule();
+  };
+
+  document.getElementById("exportBtn").onclick = () => {
+    if(selected.length === 0){ alert("Deine Auswahl ist leer."); return; }
+    const sorted = [...selected].sort((a,b) => toAbsMinutes(a.start) - toAbsMinutes(b.start));
+    const lines = ["MEIN SYNDICATE 2026 TIMETABLE", "03.10.26 · Westfalenhallen, Dortmund", ""];
+    sorted.forEach(item => {
+      lines.push(`${item.start} – ${item.end}  |  ${item.name}  (${item.stage})`);
+    });
+    const blob = new Blob([lines.join("\n")], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "mein-syndicate-2026-timetable.txt";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  // ---- Init --------------------------------------------------------------
+  renderTimeline();
+  renderSchedule();
+</script>
+
+</body>
+</html>
