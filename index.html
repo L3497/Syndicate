@@ -18,6 +18,8 @@
     --text: #f2e9dc;
     --text-dim: #a89a86;
     --danger: #d4574a;
+    --ig: #d6489b;
+    --spot: #1ed760;
   }
   *{ box-sizing: border-box; }
   html,body{ margin:0; padding:0; }
@@ -39,7 +41,7 @@
   }
 
   header.hero{
-    padding: 3rem 1.2rem 2rem;
+    padding: 3rem 1.2rem 1.6rem;
     text-align: center;
     border-bottom: 1px solid var(--line);
   }
@@ -56,6 +58,24 @@
   }
   header.hero .meta strong{ color: var(--ember-bright); font-weight: 500; }
 
+  .playlist-link{
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    background: var(--surface-2);
+    border: 1px solid var(--spot);
+    color: var(--spot);
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .playlist-link:hover{ background: rgba(30,215,96,0.1); }
+
   .wrap{
     max-width: 1300px;
     margin: 0 auto;
@@ -69,7 +89,6 @@
   }
   .hint strong{ color: var(--ember-bright); font-weight: 500; }
 
-  /* Legend */
   .legend{
     display: flex;
     flex-wrap: wrap;
@@ -90,7 +109,6 @@
     border-radius: 2px;
   }
 
-  /* Timeline */
   .timeline-outer{
     overflow-x: auto;
     border: 1px solid var(--line);
@@ -98,9 +116,7 @@
     background: var(--surface);
     -webkit-overflow-scrolling: touch;
   }
-  .timeline-inner{
-    position: relative;
-  }
+  .timeline-inner{ position: relative; }
   .ruler{
     position: relative;
     height: 34px;
@@ -108,8 +124,7 @@
   }
   .ruler .tick{
     position: absolute;
-    top: 0;
-    bottom: 0;
+    top: 0; bottom: 0;
     border-left: 1px solid var(--line);
     padding-left: 6px;
     display: flex;
@@ -128,8 +143,7 @@
   .stage-track:last-child{ border-bottom: none; }
   .stage-track .stage-tag{
     position: sticky;
-    left: 0;
-    top: 0;
+    left: 0; top: 0;
     z-index: 3;
     display: inline-block;
     padding: 0.3rem 0.7rem;
@@ -141,30 +155,24 @@
     border-radius: 3px;
     color: #14100c;
   }
-  .stage-track .grid-lines{
-    position: absolute;
-    inset: 0;
-  }
+  .stage-track .grid-lines{ position: absolute; inset: 0; }
   .stage-track .grid-lines .vline{
-    position: absolute;
-    top: 0; bottom: 0;
+    position: absolute; top: 0; bottom: 0;
     border-left: 1px solid var(--line);
   }
 
   .block{
     position: absolute;
-    top: 32px;
-    bottom: 8px;
+    top: 32px; bottom: 8px;
     border-radius: 4px;
     border: 1px solid rgba(0,0,0,0.35);
     padding: 0.35rem 0.5rem;
     overflow: hidden;
     cursor: pointer;
-    transition: transform 0.1s, box-shadow 0.15s, filter 0.15s;
+    transition: filter 0.15s;
     color: #17110a;
   }
   .block:hover{ filter: brightness(1.08); }
-  .block:active{ transform: scale(0.98); }
   .block .b-time{
     font-size: 0.68rem;
     font-weight: 600;
@@ -186,18 +194,131 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
+  .block .quick-add{
+    position: absolute;
+    top: 2px; right: 2px;
+    width: 1.3rem; height: 1.3rem;
+    border-radius: 3px;
+    border: 1px solid rgba(0,0,0,0.4);
+    background: rgba(255,255,255,0.35);
+    color: #17110a;
+    font-size: 0.85rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .block .quick-add:hover{ background: rgba(255,255,255,0.6); }
   .block.selected{
     outline: 2px solid var(--text);
     outline-offset: -2px;
-    box-shadow: 0 0 0 3px rgba(242,233,220,0.15);
   }
-  .block.selected::after{
-    content: "✓";
+  .block.selected .quick-add{ background: var(--text); }
+  .block.selected .quick-add::after{ content: "✓"; }
+  .block:not(.selected) .quick-add::after{ content: "+"; }
+
+  /* Modal */
+  .modal-backdrop{
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 50;
+  }
+  .modal-backdrop.open{ display: flex; }
+  @media(min-width: 700px){
+    .modal-backdrop{ align-items: center; }
+  }
+  .modal{
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px 10px 0 0;
+    width: 100%;
+    max-width: 480px;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 1.4rem;
+    position: relative;
+  }
+  @media(min-width: 700px){
+    .modal{ border-radius: 10px; }
+  }
+  .modal .close-btn{
     position: absolute;
-    top: 2px;
-    right: 4px;
-    font-size: 0.7rem;
+    top: 0.8rem; right: 0.8rem;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    color: var(--text);
+    width: 2rem; height: 2rem;
+    border-radius: 50%;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  .modal-head{ margin-bottom: 1rem; padding-right: 2rem; }
+  .modal-head .m-time{ color: var(--ember-bright); font-weight: 600; font-size: 0.9rem; }
+  .modal-head h3{ font-size: 1.9rem; text-transform: uppercase; margin-top: 0.1rem; }
+  .modal-head .m-stage{ color: var(--text-dim); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.03em; }
+  .modal-head .m-sub{ color: var(--text-dim); font-size: 0.82rem; margin-top: 0.2rem; }
+
+  .artist-card{
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 0.8rem;
+    margin-bottom: 0.7rem;
+  }
+  .artist-avatar{
+    width: 3rem; height: 3rem;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    color: #17110a;
+    flex-shrink: 0;
+  }
+  .artist-info{ flex: 1; min-width: 0; }
+  .artist-info .a-name{ font-size: 1rem; font-weight: 600; margin-bottom: 0.4rem; }
+  .artist-links{ display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .artist-links a, .artist-links span{
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    padding: 0.3rem 0.6rem;
+    border-radius: 20px;
+    text-decoration: none;
+  }
+  .artist-links a.ig{ background: rgba(214,72,155,0.15); color: var(--ig); border: 1px solid rgba(214,72,155,0.4); }
+  .artist-links a.spot{ background: rgba(30,215,96,0.12); color: var(--spot); border: 1px solid rgba(30,215,96,0.4); }
+  .artist-links span.missing{ background: rgba(168,154,134,0.08); color: var(--text-dim); border: 1px solid var(--line); }
+
+  .modal-actions{ margin-top: 0.4rem; }
+  .modal-actions button{
+    width: 100%;
+    background: var(--ember-bright);
+    border: none;
+    color: #17110a;
+    padding: 0.75rem;
+    font-family: 'Oswald', sans-serif;
     font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.85rem;
+  }
+  .modal-actions button.remove-mode{
+    background: var(--surface-2);
+    color: var(--text);
+    border: 1px solid var(--danger);
   }
 
   /* My timetable panel */
@@ -208,32 +329,13 @@
     padding: 1.2rem;
     margin-top: 1.8rem;
   }
-  .panel h2{
-    font-size: 1.8rem;
-    text-transform: uppercase;
-    color: var(--ember-bright);
-    margin-bottom: 0.2rem;
-  }
-  .panel .sub-note{
-    color: var(--text-dim);
-    font-size: 0.85rem;
-    margin-bottom: 1rem;
-  }
-  .my-grid{
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-    gap: 0.7rem;
-  }
+  .panel h2{ font-size: 1.8rem; text-transform: uppercase; color: var(--ember-bright); margin-bottom: 0.2rem; }
+  .panel .sub-note{ color: var(--text-dim); font-size: 0.85rem; margin-bottom: 1rem; }
+  .my-grid{ display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 0.7rem; }
   .my-slot{
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 0.5rem;
-    background: var(--surface-2);
-    border: 1px solid var(--line);
-    border-radius: 4px;
-    padding: 0.6rem 0.7rem;
-    border-left: 4px solid var(--ember);
+    display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem;
+    background: var(--surface-2); border: 1px solid var(--line); border-radius: 4px;
+    padding: 0.6rem 0.7rem; border-left: 4px solid var(--ember);
   }
   .my-slot.overlap{ border-left-color: var(--danger); }
   .my-slot .info .time{ color: var(--ember-bright); font-weight: 600; font-size: 0.82rem; }
@@ -241,49 +343,20 @@
   .my-slot .info .act{ font-size: 0.96rem; }
   .my-slot .info .stage{ color: var(--text-dim); font-size: 0.7rem; text-transform: uppercase; }
   .my-slot .info .overlap-note{ color: var(--danger); font-size: 0.68rem; text-transform: uppercase; display:block; }
-  .my-slot .remove{
-    background: none; border: none;
-    color: var(--text-dim);
-    font-size: 1.05rem;
-    cursor: pointer;
-    flex-shrink: 0;
-  }
+  .my-slot .remove{ background: none; border: none; color: var(--text-dim); font-size: 1.05rem; cursor: pointer; flex-shrink: 0; }
   .my-slot .remove:hover{ color: var(--danger); }
-  .empty-msg{
-    color: var(--text-dim);
-    font-size: 0.9rem;
-    padding: 0.6rem 0;
-  }
-  .panel-actions{
-    display: flex;
-    gap: 0.6rem;
-    margin-top: 1.2rem;
-    flex-wrap: wrap;
-  }
+  .empty-msg{ color: var(--text-dim); font-size: 0.9rem; padding: 0.6rem 0; }
+  .panel-actions{ display: flex; gap: 0.6rem; margin-top: 1.2rem; flex-wrap: wrap; }
   .panel-actions button{
-    flex: 1;
-    min-width: 140px;
-    background: var(--surface-2);
-    border: 1px solid var(--line);
-    color: var(--text);
-    padding: 0.6rem 0.8rem;
-    font-family: 'Oswald', sans-serif;
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 0.78rem;
-    letter-spacing: 0.03em;
-    border-radius: 3px;
-    cursor: pointer;
+    flex: 1; min-width: 140px;
+    background: var(--surface-2); border: 1px solid var(--line); color: var(--text);
+    padding: 0.6rem 0.8rem; font-family: 'Oswald', sans-serif; font-weight: 600;
+    text-transform: uppercase; font-size: 0.78rem; letter-spacing: 0.03em;
+    border-radius: 3px; cursor: pointer;
   }
   .panel-actions button:hover{ border-color: var(--ember-bright); color: var(--ember-bright); }
 
-  footer{
-    text-align: center;
-    color: var(--text-dim);
-    font-size: 0.78rem;
-    padding: 1.5rem;
-    border-top: 1px solid var(--line);
-  }
+  footer{ text-align: center; color: var(--text-dim); font-size: 0.78rem; padding: 1.5rem; border-top: 1px solid var(--line); }
 </style>
 </head>
 <body>
@@ -291,10 +364,12 @@
 <header class="hero">
   <div class="brand">SYNDICATE <span>2026</span></div>
   <div class="meta">03.10.26 &nbsp;·&nbsp; <strong>Westfalenhallen, Dortmund</strong> &nbsp;·&nbsp; 19:00 – 05:00</div>
+  <br>
+  <a class="playlist-link" href="https://open.spotify.com/playlist/5pJzopO5mCihQd8Zhw0LHF" target="_blank" rel="noopener">🎧 Offizielle SYNDICATE 2026 Playlist</a>
 </header>
 
 <div class="wrap">
-  <p class="hint">Tippe auf einen DJ-Block, um ihn zu <strong>„Mein Timetable“</strong> hinzuzufügen. Nach links/rechts wischen, um die ganze Nacht zu sehen.</p>
+  <p class="hint">Tippe auf einen DJ-Block für <strong>Instagram &amp; Spotify</strong>, oder direkt auf „+" um ihn zu <strong>Mein Timetable</strong> hinzuzufügen. Nach links/rechts wischen für die ganze Nacht.</p>
 
   <div class="legend" id="legend"></div>
 
@@ -313,27 +388,39 @@
   </div>
 </div>
 
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal">
+    <button class="close-btn" id="modalClose">✕</button>
+    <div class="modal-head" id="modalHead"></div>
+    <div id="modalArtists"></div>
+    <div class="modal-actions">
+      <button id="modalToggle"></button>
+    </div>
+  </div>
+</div>
+
 <footer>Inoffizielles Fan-Tool auf Basis des veröffentlichten Timetables · nicht offiziell mit SYNDICATE / Dutch Hardcore Ambassadors verbunden.</footer>
 
 <script>
   // ---- Data ----------------------------------------------------------
+  // artists: [{name, ig: url|null, spotify: artistId|null}]
   const stages = [
     {
       name: "Mainstage",
       host: "Tha Watcher",
       color: "#c9782c",
       acts: [
-        ["19:00","20:30","Predator"],
-        ["20:30","21:30","Mad Dog"],
-        ["21:30","22:30","Korsakoff"],
-        ["22:30","23:30","Chaos Project"],
-        ["23:30","00:00","Hysta","Dance With The Wolves"],
-        ["00:00","01:00","Neophyte","The Timemachine"],
-        ["01:00","02:00","Angerfist"],
-        ["02:00","02:45","Dr. Peacock"],
-        ["02:45","03:30","Miss K8"],
-        ["03:30","04:15","The Dark Horror"],
-        ["04:15","05:00","Paul Elstak"],
+        { start:"19:00", end:"20:30", headline:"Predator", artists:[{name:"Predator", ig:"https://www.instagram.com/predator_nl/", spotify:"6w9oQKCoyiUg1WDsPwS3wz"}] },
+        { start:"20:30", end:"21:30", headline:"Mad Dog", artists:[{name:"Mad Dog", ig:"https://www.instagram.com/djmaddog/", spotify:"7oX7rzli18XsB2WFd88oW4"}] },
+        { start:"21:30", end:"22:30", headline:"Korsakoff", artists:[{name:"Korsakoff", ig:"https://www.instagram.com/korsakoff_dj/", spotify:"1rWaCpcmmjycvD00Kf6YyE"}] },
+        { start:"22:30", end:"23:30", headline:"Chaos Project", artists:[{name:"Chaos Project", ig:"https://www.instagram.com/chaosproject_official/", spotify:"31yN9ocbPndhIWUxTIQArT"}] },
+        { start:"23:30", end:"00:00", headline:"Hysta", sub:"Dance With The Wolves", artists:[{name:"Hysta", ig:"https://www.instagram.com/hysta.dj/", spotify:"5b4R0928g89y6qmOgtEN1O"}] },
+        { start:"00:00", end:"01:00", headline:"Neophyte", sub:"The Timemachine", artists:[{name:"Neophyte", ig:"https://www.instagram.com/djneophyte/", spotify:"2sBfVeTHUWEhczs8gw0ODP"}] },
+        { start:"01:00", end:"02:00", headline:"Angerfist", artists:[{name:"Angerfist", ig:"https://www.instagram.com/angerfist_official/", spotify:"4sQNUQjOYj9rV2sdfJ8laS"}] },
+        { start:"02:00", end:"02:45", headline:"Dr. Peacock", artists:[{name:"Dr. Peacock", ig:"https://www.instagram.com/dr_peacock/", spotify:"4RbUYWWjEBb4umwqakOEd3"}] },
+        { start:"02:45", end:"03:30", headline:"Miss K8", artists:[{name:"Miss K8", ig:"https://www.instagram.com/missk8/", spotify:"776uRsooWrGiVZkVWtvfgO"}] },
+        { start:"03:30", end:"04:15", headline:"The Dark Horror", artists:[{name:"The Dark Horror", ig:"https://www.instagram.com/thedarkhorror/", spotify:"3e7LfI39pUL22PeGn1mlFa"}] },
+        { start:"04:15", end:"05:00", headline:"Paul Elstak", artists:[{name:"Paul Elstak", ig:"https://www.instagram.com/djpaulelstak/", spotify:"123hDJRbi4KtCdBaaKNHW6"}] },
       ]
     },
     {
@@ -341,15 +428,25 @@
       host: "Flo",
       color: "#d9552f",
       acts: [
-        ["20:30","21:30","99Problemz"],
-        ["21:30","22:30","Revealer vs. Complex"],
-        ["22:30","23:30","Gezellige Uptempo"],
-        ["23:30","00:30","Partyraiser"],
-        ["00:30","01:00","Cryogenic","Reincarnated Live"],
-        ["01:00","02:00","Barber vs. Roosterz"],
-        ["02:00","03:00","Pinotello"],
-        ["03:00","04:00","Spitnoise vs. Juliëx vs. Kili"],
-        ["04:00","05:00","Dr Donk"],
+        { start:"20:30", end:"21:30", headline:"99Problemz", artists:[{name:"99Problemz", ig:"https://www.instagram.com/99prblmz.dj/", spotify:"5RjisuNxsf5kvvbWvBSM3A"}] },
+        { start:"21:30", end:"22:30", headline:"Revealer vs. Complex", artists:[
+            {name:"Revealer", ig:"https://www.instagram.com/revealer_official/", spotify:"2QNMNOR2Sbsedf6pxxACgN"},
+            {name:"Complex", ig:"https://www.instagram.com/djcomplex_official/", spotify:null}
+        ]},
+        { start:"22:30", end:"23:30", headline:"Gezellige Uptempo", artists:[{name:"Gezellige Uptempo", ig:"https://www.instagram.com/gezellige_uptempo/", spotify:null}] },
+        { start:"23:30", end:"00:30", headline:"Partyraiser", artists:[{name:"Partyraiser", ig:"https://www.instagram.com/djpartyraiser/", spotify:"39cgo5SPJygKIlIcrwkd73"}] },
+        { start:"00:30", end:"01:00", headline:"Cryogenic", sub:"Reincarnated Live", artists:[{name:"Cryogenic", ig:"https://www.instagram.com/cryogenic_official/", spotify:"3JkD7HM6gEzgOMm9kwzunN"}] },
+        { start:"01:00", end:"02:00", headline:"Barber vs. Roosterz", artists:[
+            {name:"Barber", ig:"https://www.instagram.com/barbaricuptempo/", spotify:"55yd56lRrN815OEFUOrC1W"},
+            {name:"Roosterz", ig:null, spotify:"5oc7w0IUnErPaza4Yu2igm"}
+        ]},
+        { start:"02:00", end:"03:00", headline:"Pinotello", artists:[{name:"Pinotello", ig:null, spotify:"1WjmW8uqn4LwwsJxrDMM4d"}] },
+        { start:"03:00", end:"04:00", headline:"Spitnoise vs. Juliëx vs. Kili", artists:[
+            {name:"Spitnoise", ig:null, spotify:"29kB8Ku9QQNmrl3yZw6Xxl"},
+            {name:"Juliëx", ig:"https://www.instagram.com/juliex_music/", spotify:"3RTCQDInBbA9wEuRrhRLTq"},
+            {name:"Kili", ig:"https://www.instagram.com/kili_uptempo/", spotify:"5MOwAeqyaDS3fFo5jEqvXV"}
+        ]},
+        { start:"04:00", end:"05:00", headline:"Dr Donk", artists:[{name:"Dr Donk", ig:"https://www.instagram.com/itsdrdonk/", spotify:"0NirwTOv2qvuXsNNZkDPNu"}] },
       ]
     },
     {
@@ -357,14 +454,14 @@
       host: "Nolz",
       color: "#8f2a2a",
       acts: [
-        ["20:30","22:00","Zelecter"],
-        ["22:00","23:00","Act of Rage"],
-        ["23:00","00:00","Mish"],
-        ["00:00","00:45","D-Sturb"],
-        ["00:45","01:30","The Saints"],
-        ["01:30","02:15","Mutilator"],
-        ["02:15","03:00","More Kords"],
-        ["03:00","04:30","Spoontechnicians","Chapter V, Mortis & The Smiler"],
+        { start:"20:30", end:"22:00", headline:"Zelecter", artists:[{name:"Zelecter", ig:null, spotify:null}] },
+        { start:"22:00", end:"23:00", headline:"Act of Rage", artists:[{name:"Act of Rage", ig:"https://www.instagram.com/actofrage/", spotify:null}] },
+        { start:"23:00", end:"00:00", headline:"Mish", artists:[{name:"Mish", ig:"https://www.instagram.com/mish_dj/", spotify:null}] },
+        { start:"00:00", end:"00:45", headline:"D-Sturb", artists:[{name:"D-Sturb", ig:"https://www.instagram.com/dsturbnl/", spotify:null}] },
+        { start:"00:45", end:"01:30", headline:"The Saints", artists:[{name:"The Saints", ig:null, spotify:null}] },
+        { start:"01:30", end:"02:15", headline:"Mutilator", artists:[{name:"Mutilator", ig:null, spotify:null}] },
+        { start:"02:15", end:"03:00", headline:"More Kords", artists:[{name:"More Kords", ig:"https://www.instagram.com/morekords/", spotify:null}] },
+        { start:"03:00", end:"04:30", headline:"Spoontechnicians", sub:"Chapter V, Mortis & The Smiler", artists:[{name:"Spoontechnicians", ig:"https://www.instagram.com/spoontechrecords/", spotify:null}] },
       ]
     },
     {
@@ -372,40 +469,39 @@
       host: "Alee",
       color: "#6b3fa0",
       acts: [
-        ["20:30","21:30","Crucifier"],
-        ["21:30","22:30","Marc Acardipane"],
-        ["22:30","00:00","Vince"],
-        ["00:00","01:30","Panic"],
-        ["01:30","02:30","Ruffneck"],
-        ["02:30","03:30","Painbringer"],
-        ["03:30","04:30","The Viper"],
+        { start:"20:30", end:"21:30", headline:"Crucifier", artists:[{name:"Crucifier", ig:null, spotify:null}] },
+        { start:"21:30", end:"22:30", headline:"Marc Acardipane", artists:[{name:"Marc Acardipane", ig:null, spotify:null}] },
+        { start:"22:30", end:"00:00", headline:"Vince", artists:[{name:"Vince", ig:null, spotify:null}] },
+        { start:"00:00", end:"01:30", headline:"Panic", artists:[{name:"Panic", ig:"https://www.instagram.com/djpanicnl/", spotify:null}] },
+        { start:"01:30", end:"02:30", headline:"Ruffneck", artists:[{name:"Ruffneck", ig:null, spotify:null}] },
+        { start:"02:30", end:"03:30", headline:"Painbringer", artists:[{name:"Painbringer", ig:null, spotify:null}] },
+        { start:"03:30", end:"04:30", headline:"The Viper", artists:[{name:"The Viper", ig:"https://www.instagram.com/djtheviper/", spotify:null}] },
       ]
     },
   ];
 
   // ---- Timeline geometry -------------------------------------------
-  const PX_PER_MIN = 7;              // horizontal scale
-  const DAY_START_H = 19;            // 19:00
-  const DAY_END_H = 5;               // 05:00 (next day)
-  const TIMELINE_START = DAY_START_H * 60;                 // 1140
-  const TIMELINE_END = (DAY_END_H + 24) * 60;               // 1740
-  const TIMELINE_MIN_TOTAL = TIMELINE_END - TIMELINE_START; // 600
+  const PX_PER_MIN = 7;
+  const DAY_START_H = 19;
+  const DAY_END_H = 5;
+  const TIMELINE_START = DAY_START_H * 60;
+  const TIMELINE_END = (DAY_END_H + 24) * 60;
+  const TIMELINE_MIN_TOTAL = TIMELINE_END - TIMELINE_START;
   const TIMELINE_WIDTH = TIMELINE_MIN_TOTAL * PX_PER_MIN;
 
   function toAbsMinutes(hhmm){
     const [h,m] = hhmm.split(":").map(Number);
     const total = h*60+m;
-    return h < DAY_END_H + 1 ? total + 24*60 : total; // hours 0..5 => next day
+    return h < DAY_END_H + 1 ? total + 24*60 : total;
   }
-
-  function xFromTime(hhmm){
-    return (toAbsMinutes(hhmm) - TIMELINE_START) * PX_PER_MIN;
-  }
-
+  function xFromTime(hhmm){ return (toAbsMinutes(hhmm) - TIMELINE_START) * PX_PER_MIN; }
   function slotId(stageIdx, actIdx){ return stageIdx+"-"+actIdx; }
+  function initials(name){
+    return name.replace(/[^A-Za-zÀ-ÿ0-9 ]/g,"").split(" ").filter(Boolean).slice(0,2).map(w=>w[0].toUpperCase()).join("");
+  }
 
-  let selected = JSON.parse(localStorage.getItem("syndicate2026-selection-v2") || "[]");
-  function save(){ localStorage.setItem("syndicate2026-selection-v2", JSON.stringify(selected)); }
+  let selected = JSON.parse(localStorage.getItem("syndicate2026-selection-v3") || "[]");
+  function save(){ localStorage.setItem("syndicate2026-selection-v3", JSON.stringify(selected)); }
   function isSelected(id){ return selected.some(s => s.id === id); }
 
   // ---- Legend ---------------------------------------------------------
@@ -424,7 +520,6 @@
     timelineInner.innerHTML = "";
     timelineInner.style.width = TIMELINE_WIDTH + "px";
 
-    // Ruler
     const ruler = document.createElement("div");
     ruler.className = "ruler";
     ruler.style.width = TIMELINE_WIDTH + "px";
@@ -439,13 +534,11 @@
     }
     timelineInner.appendChild(ruler);
 
-    // Stage tracks
     stages.forEach((stage, stageIdx) => {
       const track = document.createElement("div");
       track.className = "stage-track";
       track.style.width = TIMELINE_WIDTH + "px";
 
-      // vertical grid lines (aligned with hour ticks)
       const gridLines = document.createElement("div");
       gridLines.className = "grid-lines";
       for(let h = DAY_START_H; h <= DAY_END_H + 24; h++){
@@ -464,10 +557,9 @@
       track.appendChild(tag);
 
       stage.acts.forEach((a, actIdx) => {
-        const [start, end, name, sub] = a;
         const id = slotId(stageIdx, actIdx);
-        const x = xFromTime(start);
-        const w = Math.max(xFromTime(end) - x, 44);
+        const x = xFromTime(a.start);
+        const w = Math.max(xFromTime(a.end) - x, 44);
 
         const block = document.createElement("div");
         block.className = "block" + (isSelected(id) ? " selected" : "");
@@ -475,11 +567,16 @@
         block.style.width = w + "px";
         block.style.background = stage.color;
         block.innerHTML = `
-          <div class="b-time">${start}–${end}</div>
-          <div class="b-name">${name}</div>
-          ${sub ? `<div class="b-sub">${sub}</div>` : ""}
+          <div class="b-time">${a.start}–${a.end}</div>
+          <div class="b-name">${a.headline}</div>
+          ${a.sub ? `<div class="b-sub">${a.sub}</div>` : ""}
+          <div class="quick-add"></div>
         `;
-        block.onclick = () => toggleSlot(stageIdx, actIdx);
+        block.querySelector(".quick-add").onclick = (e) => {
+          e.stopPropagation();
+          toggleSlot(stageIdx, actIdx);
+        };
+        block.onclick = () => openModal(stageIdx, actIdx);
         track.appendChild(block);
       });
 
@@ -493,13 +590,72 @@
     if(idx >= 0){
       selected.splice(idx,1);
     } else {
-      const [start,end,name,sub] = stages[stageIdx].acts[actIdx];
-      selected.push({ id, stage: stages[stageIdx].name, start, end, name, sub: sub || "" });
+      const a = stages[stageIdx].acts[actIdx];
+      selected.push({ id, stage: stages[stageIdx].name, start:a.start, end:a.end, name:a.headline });
     }
     save();
     renderTimeline();
     renderSchedule();
   }
+
+  // ---- Modal -------------------------------------------------------------
+  const modalBackdrop = document.getElementById("modalBackdrop");
+  const modalHead = document.getElementById("modalHead");
+  const modalArtists = document.getElementById("modalArtists");
+  const modalToggle = document.getElementById("modalToggle");
+  let modalCtx = null;
+
+  function openModal(stageIdx, actIdx){
+    const stage = stages[stageIdx];
+    const a = stage.acts[actIdx];
+    const id = slotId(stageIdx, actIdx);
+    modalCtx = { stageIdx, actIdx, id };
+
+    modalHead.innerHTML = `
+      <div class="m-time">${a.start} – ${a.end}</div>
+      <h3>${a.headline}</h3>
+      <div class="m-stage">${stage.name} · ${stage.host}</div>
+      ${a.sub ? `<div class="m-sub">${a.sub}</div>` : ""}
+    `;
+
+    modalArtists.innerHTML = "";
+    a.artists.forEach(artist => {
+      const card = document.createElement("div");
+      card.className = "artist-card";
+      const igHtml = artist.ig
+        ? `<a class="ig" href="${artist.ig}" target="_blank" rel="noopener">📷 Instagram</a>`
+        : `<span class="missing">Kein Instagram-Account gefunden</span>`;
+      const spotHtml = artist.spotify
+        ? `<a class="spot" href="https://open.spotify.com/artist/${artist.spotify}" target="_blank" rel="noopener">🎧 Spotify</a>`
+        : `<span class="missing">Kein Spotify-Link gefunden</span>`;
+      card.innerHTML = `
+        <div class="artist-avatar" style="background:${stage.color}">${initials(artist.name)}</div>
+        <div class="artist-info">
+          <div class="a-name">${artist.name}</div>
+          <div class="artist-links">${igHtml}${spotHtml}</div>
+        </div>
+      `;
+      modalArtists.appendChild(card);
+    });
+
+    updateModalToggle();
+    modalBackdrop.classList.add("open");
+  }
+
+  function updateModalToggle(){
+    if(!modalCtx) return;
+    const on = isSelected(modalCtx.id);
+    modalToggle.textContent = on ? "Aus Mein Timetable entfernen" : "Zu Mein Timetable hinzufügen";
+    modalToggle.className = on ? "remove-mode" : "";
+  }
+
+  modalToggle.onclick = () => {
+    if(!modalCtx) return;
+    toggleSlot(modalCtx.stageIdx, modalCtx.actIdx);
+    updateModalToggle();
+  };
+  document.getElementById("modalClose").onclick = () => modalBackdrop.classList.remove("open");
+  modalBackdrop.onclick = (e) => { if(e.target === modalBackdrop) modalBackdrop.classList.remove("open"); };
 
   // ---- Render "my timetable" panel --------------------------------------
   const scheduleEl = document.getElementById("mySchedule");
@@ -507,7 +663,7 @@
   function renderSchedule(){
     scheduleEl.innerHTML = "";
     if(selected.length === 0){
-      scheduleEl.innerHTML = `<div class="empty-msg">Noch keine Acts ausgewählt. Tippe oben in der Zeitleiste auf einen DJ-Block.</div>`;
+      scheduleEl.innerHTML = `<div class="empty-msg">Noch keine Acts ausgewählt. Tippe oben in der Zeitleiste auf „+" oder auf einen Block.</div>`;
       return;
     }
 
