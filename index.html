@@ -357,6 +357,115 @@
   .panel-actions button:hover{ border-color: var(--ember-bright); color: var(--ember-bright); }
 
   footer{ text-align: center; color: var(--text-dim); font-size: 0.78rem; padding: 1.5rem; border-top: 1px solid var(--line); }
+
+  /* Countdown */
+  .countdown-panel{
+    background: var(--surface); border: 1px solid var(--line); border-radius: 4px;
+    padding: 1.4rem; margin-top: 1.8rem; text-align: center;
+  }
+  .countdown-panel h2{ font-size: 1.6rem; text-transform: uppercase; color: var(--ember-bright); margin-bottom: 1rem; }
+  .countdown-grid{ display: flex; justify-content: center; gap: 0.8rem; flex-wrap: wrap; }
+  .countdown-grid .unit{
+    background: var(--surface-2); border: 1px solid var(--line); border-radius: 6px;
+    padding: 0.8rem 1rem; min-width: 72px;
+  }
+  .countdown-grid .unit .num{
+    font-family: 'Bebas Neue', sans-serif; font-size: 2.1rem; color: var(--text);
+    font-variant-numeric: tabular-nums; line-height: 1;
+  }
+  .countdown-grid .unit .lbl{ font-size: 0.68rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.2rem; }
+  .countdown-done{ color: var(--ember-bright); font-size: 1.3rem; }
+
+  /* BPM Smasher game */
+  .game-panel{
+    background: var(--surface); border: 1px solid var(--line); border-radius: 4px;
+    padding: 1.4rem; margin-top: 1.8rem; text-align: center;
+  }
+  .game-panel h2{ font-size: 1.8rem; text-transform: uppercase; color: var(--ember-bright); margin-bottom: 0.2rem; }
+  .game-panel .sub-note{ color: var(--text-dim); font-size: 0.85rem; margin-bottom: 1.2rem; }
+  .game-stats{
+    display: flex; justify-content: center; gap: 1.6rem; margin-bottom: 1rem;
+    font-size: 0.8rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.03em;
+  }
+  .game-stats b{ display:block; font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; color: var(--text); letter-spacing: 0; }
+  .kick-btn{
+    width: 160px; height: 160px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, var(--ember-bright), var(--ember) 70%);
+    border: 4px solid #7a4718;
+    color: #17110a; font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem;
+    letter-spacing: 0.05em; cursor: pointer; margin: 0 auto;
+    display: flex; align-items: center; justify-content: center;
+    user-select: none; -webkit-tap-highlight-color: transparent;
+    box-shadow: 0 6px 0 #5c3510;
+  }
+  .kick-btn:active{ transform: translateY(4px); box-shadow: 0 2px 0 #5c3510; }
+  .kick-btn:disabled{ opacity: 0.4; cursor: default; }
+  .game-result{ margin-top: 1.1rem; }
+  .game-result .rank{ font-size: 1.5rem; color: var(--ember-bright); text-transform: uppercase; }
+  .game-result .score-line{ color: var(--text-dim); font-size: 0.85rem; margin-top: 0.3rem; }
+  .game-panel .again-btn{
+    margin-top: 1rem; background: var(--surface-2); border: 1px solid var(--line); color: var(--text);
+    padding: 0.6rem 1.2rem; font-family: 'Oswald', sans-serif; font-weight: 600;
+    text-transform: uppercase; font-size: 0.78rem; letter-spacing: 0.03em;
+    border-radius: 3px; cursor: pointer;
+  }
+  .game-panel .again-btn:hover{ border-color: var(--ember-bright); color: var(--ember-bright); }
+
+  /* Game tabs */
+  .game-tabs{ display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.2rem; }
+  .game-tab{
+    background: var(--surface-2); border: 1px solid var(--line); color: var(--text-dim);
+    padding: 0.5rem 1rem; font-family: 'Oswald', sans-serif; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.03em; font-size: 0.78rem;
+    border-radius: 20px; cursor: pointer;
+  }
+  .game-tab.active{ background: var(--ember-bright); border-color: var(--ember-bright); color: #17110a; }
+  .game-view{ min-height: 40px; }
+
+  /* Whack-a-DJ */
+  .whack-grid{
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem;
+    max-width: 340px; margin: 0 auto;
+  }
+  .whack-hole{
+    aspect-ratio: 1 / 1; background: var(--surface-2); border: 1px solid var(--line);
+    border-radius: 10px; display: flex; align-items: center; justify-content: center;
+    font-size: 1.9rem; cursor: pointer; overflow: hidden; user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .whack-hole .mole{
+    transform: scale(0); transition: transform 0.12s ease-out;
+  }
+  .whack-hole.up .mole{ transform: scale(1); }
+
+  /* Kick Dodge */
+  .dodge-area{
+    position: relative; width: 100%; max-width: 320px; height: 380px;
+    margin: 0 auto; background: var(--surface-2); border: 1px solid var(--line);
+    border-radius: 8px; overflow: hidden;
+  }
+  .dodge-player{
+    position: absolute; bottom: 8px; width: 40px; height: 40px;
+    display: flex; align-items: center; justify-content: center; font-size: 1.6rem;
+    left: 140px;
+  }
+  .dodge-obstacle{
+    position: absolute; width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
+  }
+  .dodge-overlay{
+    position: absolute; inset: 0; background: rgba(12,10,8,0.75);
+    display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 0.6rem;
+  }
+  .dodge-overlay .rank{ font-size: 1.3rem; color: var(--ember-bright); text-transform: uppercase; text-align: center; padding: 0 1rem; }
+  .dodge-overlay .score-line{ color: var(--text-dim); font-size: 0.82rem; text-align: center; padding: 0 1rem; }
+  .dodge-controls{ display: flex; justify-content: center; gap: 1.5rem; margin-top: 0.9rem; }
+  .dodge-btn{
+    width: 64px; height: 48px; border-radius: 8px;
+    background: var(--surface-2); border: 1px solid var(--line); color: var(--text);
+    font-size: 1.3rem; cursor: pointer; -webkit-tap-highlight-color: transparent;
+  }
+  .dodge-btn:active{ background: var(--ember); color: #17110a; }
 </style>
 </head>
 <body>
@@ -365,7 +474,7 @@
   <div class="brand">SYNDICATE <span>2026</span></div>
   <div class="meta">03.10.26 &nbsp;·&nbsp; <strong>Westfalenhallen, Dortmund</strong> &nbsp;·&nbsp; 19:00 – 05:00</div>
   <br>
-  <a class="playlist-link" href="https://open.spotify.com/playlist/5pJzopO5mCihQd8Zhw0LHF" target="_blank" rel="noopener">🎧 SYNDICATE 2026 Playlist</a>
+  <a class="playlist-link" href="https://open.spotify.com/playlist/5pJzopO5mCihQd8Zhw0LHF" target="_blank" rel="noopener">🎧  SYNDICATE 2026 Playlist</a>
 </header>
 
 <div class="wrap">
@@ -399,7 +508,77 @@
   </div>
 </div>
 
-<footer>Inoffizielles Tool by L34. Nicht offiziell mit SYNDICATE / Dutch Hardcore Ambassadors verbunden.</footer>
+<div class="wrap" style="padding-top:0;">
+  <div class="countdown-panel">
+    <h2>Noch bis SYNDICATE 2026</h2>
+    <div class="countdown-grid" id="countdownGrid"></div>
+  </div>
+
+  <div class="game-panel">
+    <h2>Pausen-Games</h2>
+    <div class="sub-note">Zeitvertreib bis es losgeht.</div>
+
+    <div class="game-tabs">
+      <button class="game-tab active" data-game="bpm">BPM Smasher</button>
+      <button class="game-tab" data-game="whack">Whack-a-DJ</button>
+      <button class="game-tab" data-game="dodge">Kick Dodge</button>
+    </div>
+
+    <!-- BPM Smasher -->
+    <div class="game-view" id="view-bpm">
+      <div class="sub-note">Wie viele Kicks schaffst du in 10 Sekunden?</div>
+      <div class="game-stats">
+        <div>Zeit<b id="gameTime">10</b></div>
+        <div>Kicks<b id="gameClicks">0</b></div>
+        <div>Highscore<b id="gameHigh">0</b></div>
+      </div>
+      <button class="kick-btn" id="kickBtn">START</button>
+      <div class="game-result" id="gameResult" style="display:none;">
+        <div class="rank" id="gameRank"></div>
+        <div class="score-line" id="gameScoreLine"></div>
+        <button class="again-btn" id="againBtn">Nochmal</button>
+      </div>
+    </div>
+
+    <!-- Whack-a-DJ -->
+    <div class="game-view" id="view-whack" style="display:none;">
+      <div class="sub-note">20 Sekunden: Klick auf die DJs 🐺, aber nicht auf den Security 🚫!</div>
+      <div class="game-stats">
+        <div>Zeit<b id="whackTime">20</b></div>
+        <div>Punkte<b id="whackScore">0</b></div>
+        <div>Highscore<b id="whackHigh">0</b></div>
+      </div>
+      <div class="whack-grid" id="whackGrid"></div>
+      <button class="again-btn" id="whackStartBtn" style="margin-top:1rem;">START</button>
+      <div class="game-result" id="whackResult" style="display:none;">
+        <div class="rank" id="whackRank"></div>
+        <div class="score-line" id="whackScoreLine"></div>
+        <button class="again-btn" id="whackAgainBtn">Nochmal</button>
+      </div>
+    </div>
+
+    <!-- Kick Dodge -->
+    <div class="game-view" id="view-dodge" style="display:none;">
+      <div class="sub-note">Weiche den fallenden Boxen aus – wie lange überlebst du?</div>
+      <div class="game-stats">
+        <div>Zeit<b id="dodgeTime">0</b></div>
+        <div>Highscore<b id="dodgeHigh">0</b></div>
+      </div>
+      <div class="dodge-area" id="dodgeArea">
+        <div class="dodge-player" id="dodgePlayer">🤘</div>
+        <div class="dodge-overlay" id="dodgeOverlay">
+          <button class="again-btn" id="dodgeStartBtn">START</button>
+        </div>
+      </div>
+      <div class="dodge-controls">
+        <button class="dodge-btn" id="dodgeLeft">◀</button>
+        <button class="dodge-btn" id="dodgeRight">▶</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>Inoffizielles Fan-Tool auf Basis des veröffentlichten Timetables · nicht offiziell mit SYNDICATE / Dutch Hardcore Ambassadors verbunden.</footer>
 
 <script>
   // ---- Data ----------------------------------------------------------
@@ -732,6 +911,374 @@
     a.click();
     URL.revokeObjectURL(url);
   };
+
+  // ---- Countdown to event -------------------------------------------------
+  const EVENT_DATE = new Date("2026-10-03T19:00:00+02:00");
+  const countdownGrid = document.getElementById("countdownGrid");
+
+  function renderCountdown(){
+    const diff = EVENT_DATE.getTime() - Date.now();
+    if(diff <= 0){
+      countdownGrid.innerHTML = `<div class="countdown-done">🐺 Es ist so weit – viel Spaß heute Nacht! 🐺</div>`;
+      return;
+    }
+    const totalSeconds = Math.floor(diff / 1000);
+    const days = Math.floor(totalSeconds / 86400);
+    const hours = Math.floor((totalSeconds % 86400) / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    const units = [
+      [days, "Tage"], [hours, "Std"], [minutes, "Min"], [seconds, "Sek"]
+    ];
+    countdownGrid.innerHTML = units.map(([val,lbl]) =>
+      `<div class="unit"><div class="num">${String(val).padStart(2,"0")}</div><div class="lbl">${lbl}</div></div>`
+    ).join("");
+  }
+  renderCountdown();
+  setInterval(renderCountdown, 1000);
+
+  // ---- BPM Smasher game ----------------------------------------------------
+  const kickBtn = document.getElementById("kickBtn");
+  const gameTimeEl = document.getElementById("gameTime");
+  const gameClicksEl = document.getElementById("gameClicks");
+  const gameHighEl = document.getElementById("gameHigh");
+  const gameResultEl = document.getElementById("gameResult");
+  const gameRankEl = document.getElementById("gameRank");
+  const gameScoreLineEl = document.getElementById("gameScoreLine");
+  const againBtn = document.getElementById("againBtn");
+
+  const GAME_SECONDS = 10;
+  let gameState = "idle"; // idle -> running -> done
+  let clicks = 0;
+  let timeLeft = GAME_SECONDS;
+  let gameTimer = null;
+  let highScore = parseInt(localStorage.getItem("syndicate2026-bpm-highscore") || "0", 10);
+  gameHighEl.textContent = highScore;
+
+  function rankFor(bpm){
+    if(bpm < 300) return ["Aufwärmphase 🐌", "Noch am Ticket abholen..."];
+    if(bpm < 500) return ["Raver in Ausbildung 🙂", "Solide Basis, weiter so!"];
+    if(bpm < 700) return ["Hardcore Novize 🔥", "Der Pit spürt dich schon."];
+    if(bpm < 900) return ["Kickfest-Veteran 👹", "Mainstage-tauglich!"];
+    return ["Mainstage-Legende 🐺", "Tha Watcher persönlich nickt anerkennend."];
+  }
+
+  function startGame(){
+    gameState = "running";
+    clicks = 0;
+    timeLeft = GAME_SECONDS;
+    gameClicksEl.textContent = "0";
+    gameTimeEl.textContent = String(timeLeft);
+    gameResultEl.style.display = "none";
+    kickBtn.disabled = false;
+    kickBtn.textContent = "KICK!";
+
+    gameTimer = setInterval(() => {
+      timeLeft--;
+      gameTimeEl.textContent = String(Math.max(timeLeft,0));
+      if(timeLeft <= 0){
+        clearInterval(gameTimer);
+        endGame();
+      }
+    }, 1000);
+  }
+
+  function endGame(){
+    gameState = "done";
+    kickBtn.disabled = true;
+    kickBtn.textContent = "FERTIG";
+    const bpm = clicks * (60 / GAME_SECONDS);
+    const bpmRounded = Math.round(bpm);
+    if(bpmRounded > highScore){
+      highScore = bpmRounded;
+      localStorage.setItem("syndicate2026-bpm-highscore", String(highScore));
+    }
+    gameHighEl.textContent = highScore;
+    const [rank, comment] = rankFor(bpmRounded);
+    gameRankEl.textContent = rank;
+    gameScoreLineEl.innerHTML = `${clicks} Kicks in ${GAME_SECONDS}s &nbsp;·&nbsp; ~${bpmRounded} BPM<br>${comment}`;
+    gameResultEl.style.display = "block";
+  }
+
+  kickBtn.onclick = () => {
+    if(gameState === "idle"){
+      startGame();
+      return;
+    }
+    if(gameState === "running"){
+      clicks++;
+      gameClicksEl.textContent = String(clicks);
+    }
+  };
+
+  againBtn.onclick = () => {
+    gameState = "idle";
+    startGame();
+  };
+
+  // ---- Game tabs -----------------------------------------------------------
+  const gameTabs = document.querySelectorAll(".game-tab");
+  const gameViews = {
+    bpm: document.getElementById("view-bpm"),
+    whack: document.getElementById("view-whack"),
+    dodge: document.getElementById("view-dodge"),
+  };
+  gameTabs.forEach(tab => {
+    tab.onclick = () => {
+      gameTabs.forEach(t => t.classList.remove("active"));
+      tab.classList.add("active");
+      Object.entries(gameViews).forEach(([key, el]) => {
+        el.style.display = (key === tab.dataset.game) ? "block" : "none";
+      });
+      // stop any running background games when switching away
+      stopWhack();
+      stopDodge();
+    };
+  });
+
+  // ---- Whack-a-DJ ------------------------------------------------------------
+  const WHACK_SECONDS = 20;
+  const whackGrid = document.getElementById("whackGrid");
+  const whackTimeEl = document.getElementById("whackTime");
+  const whackScoreEl = document.getElementById("whackScore");
+  const whackHighEl = document.getElementById("whackHigh");
+  const whackResultEl = document.getElementById("whackResult");
+  const whackRankEl = document.getElementById("whackRank");
+  const whackScoreLineEl = document.getElementById("whackScoreLine");
+  const whackStartBtn = document.getElementById("whackStartBtn");
+  const whackAgainBtn = document.getElementById("whackAgainBtn");
+
+  let whackHigh = parseInt(localStorage.getItem("syndicate2026-whack-highscore") || "0", 10);
+  whackHighEl.textContent = whackHigh;
+
+  let whackHoles = [];
+  let whackScore = 0;
+  let whackTimeLeft = WHACK_SECONDS;
+  let whackTickTimer = null;
+  let whackSpawnTimer = null;
+  let whackActiveHole = null;
+
+  for(let i = 0; i < 9; i++){
+    const hole = document.createElement("div");
+    hole.className = "whack-hole";
+    hole.innerHTML = `<span class="mole"></span>`;
+    whackGrid.appendChild(hole);
+    whackHoles.push(hole);
+  }
+
+  function whackRankFor(score){
+    if(score < 8) return ["Nebel im Pit 🌫️", "Beim nächsten Mal schneller!"];
+    if(score < 15) return ["Solider Raver 🙂", "Reflexe wach!"];
+    if(score < 22) return ["Kick-Jäger 🔥", "Die DJs haben keine Chance."];
+    return ["Security-Albtraum 👹", "Niemand entkommt deinem Klick!"];
+  }
+
+  function whackSpawn(){
+    // clear previous mole if still up
+    if(whackActiveHole){
+      whackActiveHole.hole.classList.remove("up");
+      whackActiveHole = null;
+    }
+    const hole = whackHoles[Math.floor(Math.random() * whackHoles.length)];
+    const isBad = Math.random() < 0.22;
+    const mole = hole.querySelector(".mole");
+    mole.textContent = isBad ? "🚫" : "🐺";
+    hole.classList.add("up");
+    hole.onclick = () => {
+      if(!hole.classList.contains("up")) return;
+      hole.classList.remove("up");
+      whackScore += isBad ? -1 : 1;
+      if(whackScore < 0) whackScore = 0;
+      whackScoreEl.textContent = whackScore;
+      whackActiveHole = null;
+    };
+    whackActiveHole = { hole };
+    // difficulty ramp: mole stays up shorter as time passes
+    const upTime = Math.max(450, 900 - (WHACK_SECONDS - whackTimeLeft) * 20);
+    setTimeout(() => {
+      if(whackActiveHole && whackActiveHole.hole === hole){
+        hole.classList.remove("up");
+        whackActiveHole = null;
+      }
+    }, upTime);
+  }
+
+  function startWhack(){
+    whackScore = 0;
+    whackTimeLeft = WHACK_SECONDS;
+    whackScoreEl.textContent = "0";
+    whackTimeEl.textContent = String(WHACK_SECONDS);
+    whackResultEl.style.display = "none";
+    whackStartBtn.style.display = "none";
+    whackHoles.forEach(h => h.classList.remove("up"));
+
+    whackSpawnTimer = setInterval(whackSpawn, 750);
+    whackTickTimer = setInterval(() => {
+      whackTimeLeft--;
+      whackTimeEl.textContent = String(Math.max(whackTimeLeft, 0));
+      if(whackTimeLeft <= 0) endWhack();
+    }, 1000);
+  }
+
+  function stopWhack(){
+    clearInterval(whackSpawnTimer);
+    clearInterval(whackTickTimer);
+    whackSpawnTimer = null;
+    whackTickTimer = null;
+  }
+
+  function endWhack(){
+    stopWhack();
+    whackHoles.forEach(h => h.classList.remove("up"));
+    if(whackScore > whackHigh){
+      whackHigh = whackScore;
+      localStorage.setItem("syndicate2026-whack-highscore", String(whackHigh));
+    }
+    whackHighEl.textContent = whackHigh;
+    const [rank, comment] = whackRankFor(whackScore);
+    whackRankEl.textContent = rank;
+    whackScoreLineEl.innerHTML = `${whackScore} Punkte in ${WHACK_SECONDS}s<br>${comment}`;
+    whackResultEl.style.display = "block";
+    whackStartBtn.style.display = "inline-block";
+    whackStartBtn.textContent = "Nochmal";
+  }
+
+  whackStartBtn.onclick = startWhack;
+  whackAgainBtn.onclick = startWhack;
+
+  // ---- Kick Dodge --------------------------------------------------------
+  const dodgeArea = document.getElementById("dodgeArea");
+  const dodgePlayer = document.getElementById("dodgePlayer");
+  const dodgeOverlay = document.getElementById("dodgeOverlay");
+  const dodgeStartBtn = document.getElementById("dodgeStartBtn");
+  const dodgeTimeEl = document.getElementById("dodgeTime");
+  const dodgeHighEl = document.getElementById("dodgeHigh");
+  const dodgeLeftBtn = document.getElementById("dodgeLeft");
+  const dodgeRightBtn = document.getElementById("dodgeRight");
+
+  let dodgeHigh = parseFloat(localStorage.getItem("syndicate2026-dodge-highscore") || "0");
+  dodgeHighEl.textContent = dodgeHigh.toFixed(1) + "s";
+
+  const DODGE_AREA_W = 320;
+  const DODGE_AREA_H = 380;
+  const PLAYER_W = 40;
+  const OBSTACLE_W = 32;
+  let dodgePlaying = false;
+  let dodgeX = (DODGE_AREA_W - PLAYER_W) / 2;
+  let dodgeMoveLeft = false;
+  let dodgeMoveRight = false;
+  let dodgeObstacles = [];
+  let dodgeStartTime = 0;
+  let dodgeRafId = null;
+  let dodgeLastSpawn = 0;
+  let dodgeSpawnGap = 900;
+
+  function dodgeReset(){
+    dodgeObstacles.forEach(o => o.el.remove());
+    dodgeObstacles = [];
+    dodgeX = (DODGE_AREA_W - PLAYER_W) / 2;
+    dodgePlayer.style.left = dodgeX + "px";
+    dodgeSpawnGap = 900;
+  }
+
+  function startDodge(){
+    dodgeReset();
+    dodgePlaying = true;
+    dodgeOverlay.style.display = "none";
+    dodgeStartTime = performance.now();
+    dodgeLastSpawn = 0;
+    dodgeRafId = requestAnimationFrame(dodgeLoop);
+  }
+
+  function stopDodge(){
+    dodgePlaying = false;
+    if(dodgeRafId) cancelAnimationFrame(dodgeRafId);
+    dodgeRafId = null;
+  }
+
+  function endDodge(){
+    stopDodge();
+    const survived = (performance.now() - dodgeStartTime) / 1000;
+    if(survived > dodgeHigh){
+      dodgeHigh = survived;
+      localStorage.setItem("syndicate2026-dodge-highscore", String(dodgeHigh));
+    }
+    dodgeHighEl.textContent = dodgeHigh.toFixed(1) + "s";
+    dodgeOverlay.innerHTML = `
+      <div class="rank">Erwischt! 💥</div>
+      <div class="score-line">Überlebt: ${survived.toFixed(1)}s<br>Highscore: ${dodgeHigh.toFixed(1)}s</div>
+      <button class="again-btn" id="dodgeStartBtn">Nochmal</button>
+    `;
+    dodgeOverlay.style.display = "flex";
+    document.getElementById("dodgeStartBtn").onclick = startDodge;
+  }
+
+  function dodgeLoop(ts){
+    if(!dodgePlaying) return;
+    const elapsed = (ts - dodgeStartTime) / 1000;
+    dodgeTimeEl.textContent = elapsed.toFixed(1);
+
+    // move player
+    const speed = 4.5;
+    if(dodgeMoveLeft) dodgeX -= speed;
+    if(dodgeMoveRight) dodgeX += speed;
+    dodgeX = Math.max(0, Math.min(DODGE_AREA_W - PLAYER_W, dodgeX));
+    dodgePlayer.style.left = dodgeX + "px";
+
+    // spawn obstacles, ramp difficulty
+    if(!dodgeLastSpawn || ts - dodgeLastSpawn > dodgeSpawnGap){
+      dodgeLastSpawn = ts;
+      dodgeSpawnGap = Math.max(320, 900 - elapsed * 25);
+      const el = document.createElement("div");
+      el.className = "dodge-obstacle";
+      el.textContent = Math.random() < 0.5 ? "📦" : "🔊";
+      const x = Math.random() * (DODGE_AREA_W - OBSTACLE_W);
+      el.style.left = x + "px";
+      el.style.top = "-32px";
+      dodgeArea.appendChild(el);
+      dodgeObstacles.push({ el, x, y: -32, speed: 2.2 + elapsed * 0.06 });
+    }
+
+    // move obstacles + collision check
+    const playerBox = { x: dodgeX, y: DODGE_AREA_H - 48, w: PLAYER_W, h: 40 };
+    for(let i = dodgeObstacles.length - 1; i >= 0; i--){
+      const o = dodgeObstacles[i];
+      o.y += o.speed;
+      o.el.style.top = o.y + "px";
+      if(o.y > DODGE_AREA_H){
+        o.el.remove();
+        dodgeObstacles.splice(i, 1);
+        continue;
+      }
+      const obsBox = { x: o.x, y: o.y, w: OBSTACLE_W, h: OBSTACLE_W };
+      const hit = playerBox.x < obsBox.x + obsBox.w && playerBox.x + playerBox.w > obsBox.x &&
+                  playerBox.y < obsBox.y + obsBox.h && playerBox.y + playerBox.h > obsBox.y;
+      if(hit){
+        endDodge();
+        return;
+      }
+    }
+
+    dodgeRafId = requestAnimationFrame(dodgeLoop);
+  }
+
+  dodgeStartBtn.onclick = startDodge;
+
+  function bindHold(btn, onDown, onUp){
+    btn.addEventListener("mousedown", onDown);
+    btn.addEventListener("touchstart", (e)=>{ e.preventDefault(); onDown(); }, {passive:false});
+    ["mouseup","mouseleave","touchend","touchcancel"].forEach(ev => btn.addEventListener(ev, onUp));
+  }
+  bindHold(dodgeLeftBtn, ()=>dodgeMoveLeft=true, ()=>dodgeMoveLeft=false);
+  bindHold(dodgeRightBtn, ()=>dodgeMoveRight=true, ()=>dodgeMoveRight=false);
+  document.addEventListener("keydown", (e) => {
+    if(e.key === "ArrowLeft") dodgeMoveLeft = true;
+    if(e.key === "ArrowRight") dodgeMoveRight = true;
+  });
+  document.addEventListener("keyup", (e) => {
+    if(e.key === "ArrowLeft") dodgeMoveLeft = false;
+    if(e.key === "ArrowRight") dodgeMoveRight = false;
+  });
 
   // ---- Init --------------------------------------------------------------
   renderTimeline();
